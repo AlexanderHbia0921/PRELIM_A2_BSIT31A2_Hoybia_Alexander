@@ -144,7 +144,7 @@ namespace PRELIM_A2_BSIT31A2_Hoybia_Alexander.Controllers
             new Book { Id = 22, Title = "Jujutsu Kaisen Vol. 2", ISBN = "978-0-13-110362-7", AuthorId = 11, Author = Authors[10] },
             new Book { Id = 23, Title = "Black Clover Vol. 1", ISBN = "979-8-55-014255-5", AuthorId = 12, Author = Authors[11] },
             new Book { Id = 24, Title = "Black Clover Vol. 2", ISBN = "978-1-49-207800-5", AuthorId = 12, Author = Authors[11] },
-            new Book { Id = 25, Title = "Attack on Titan: No Regrets", ISBN = "969-7-33-782100-4", AuthorId = 6, Author = Authors[5] }
+            new Book { Id = 25, Title = "Attack on Titan: No Regrets", ISBN = "969-7-33-197080-4", AuthorId = 6, Author = Authors[5] }
     });
         
 
