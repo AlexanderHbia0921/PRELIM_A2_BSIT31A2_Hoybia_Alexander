@@ -1,0 +1,121 @@
+﻿@model (PRELIM_A2_BSIT31A2_Hoybia_Alexander.Models.Library library, List<PRELIM_A2_BSIT31A2_Hoybia_Alexander.Models.User> users)
+
+@{
+    ViewData["Title"] = "Library Overview";
+}
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .toggle-btns .hide-btn {
+        display: none;
+    }
+
+    .collapse.show ~ .toggle-btns .show-btn {
+        display: none;
+    }
+
+    .collapse.show ~ .toggle-btns .hide-btn {
+        display: inline-block;
+    }
+</style>
+
+<h2>BOOKS TABLE:</h2>
+
+<table class="table table-bordered table-striped table-primary">
+    <thead>
+        <tr>
+            <th style="text-align: center;" >Title</th>
+            <th style="text-align: center;" >ISBN</th>
+            <th style="text-align: center;" >Author</th>
+            <th style="text-align: center;" >Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model.library.ListOfBooks)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.ISBN</td>
+                <td>@book.Author?.Name</td>
+                <td>@(book.Status? "Borrowed" : "Returned")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Collapsible Section -->
+<div class="collapse" id="usersSection">
+    <div class="card card-body">
+        <h2>USERS TABLE:</h2>
+        @{
+            var allBorrowedBooks = Model.users.SelectMany(u => u.BorrowedBooks).ToList();
+            var totalBorrowed = allBorrowedBooks.Count;
+            var totalReturned = allBorrowedBooks.Count(bb => bb.ReturnedDate != null);
+        }
+        <table class="table table-hover table-bordered table-striped table-secondary">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">User</th>
+                    <th style="text-align: center;">Email Address</th>
+                    <th style="text-align: center;">Book Title</th>
+                    <th style="text-align: center;">Borrowed Date</th>
+                    <th style="text-align: center;">Returned Date</th>
+                    <th style="text-align: center;">Status</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.users)
+                {
+                    var borrowCount = user.BorrowedBooks.Count;
+
+                    if (borrowCount == 0)
+                    {
+                        <tr>
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td colspan="4"><em>No books borrowed</em></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        for (int i = 0; i < borrowCount; i++)
+                        {
+                            var borrow = user.BorrowedBooks[i];
+                            <tr>
+                                @if (i == 0)
+                                {
+                                    <td rowspan="@borrowCount">@user.Username</td>
+                                    <td rowspan="@borrowCount">@user.Email</td>
+                                }
+                                <td>@borrow.Book.Title</td>
+                                <td>@borrow.BorrowedDate.ToShortDateString()</td>
+                                <td>@(borrow.ReturnedDate?.ToShortDateString() ?? "-")</td>
+                                <td>@borrow.Status</td>
+                            </tr>
+                        }
+                    }
+                }
+                <!-- Total -->
+                <tr style="font-weight:bold; background-color: #e2e3e5;">
+                    <td colspan="2">Total:</td>
+                    <td colspan="2">Total Borrowed: @totalBorrowed</td>
+                    <td colspan="2">Total Returned: @totalReturned</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--Buttons-->
+<div class="toggle-btns mt-3">
+    <a class="btn btn-primary show-btn" data-bs-toggle="collapse" href="#usersSection" role="button" aria-expanded="false" aria-controls="usersSection">
+        Show Users
+    </a>
+    <a class="btn btn-secondary hide-btn" data-bs-toggle="collapse" href="#usersSection" role="button" aria-expanded="true" aria-controls="usersSection">
+        Hide Users
+    </a>
+</div>
